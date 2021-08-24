@@ -1,0 +1,2 @@
+rootProject.name = "Onsite 2"
+include ':app'
