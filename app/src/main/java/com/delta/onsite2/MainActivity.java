@@ -9,12 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.NumberPicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Calendar;
 import java.util.Random;
 
 
@@ -22,10 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private EditText eventName;
-
-    private NumberPicker hours;
-    private NumberPicker minutes;
+    private TimePicker timePicker;
 
     private Button addEvent;
 
@@ -38,70 +35,46 @@ public class MainActivity extends AppCompatActivity {
 
         createNotifChannel();
 
-        eventName = findViewById(R.id.eventName);
-
-        hours = findViewById(R.id.hourPicker);
-        minutes = findViewById(R.id.minutePicker);
-
-        hours.setMinValue(0);
-        hours.setMaxValue(23);
-
-        minutes.setMinValue(0);
-        minutes.setMaxValue(59);
+        timePicker = findViewById(R.id.time);
 
         addEvent = findViewById(R.id.doneButton);
 
         addEvent.setOnClickListener(v -> {
 
-            String event = eventName.getText().toString();
+            Calendar calendar = Calendar.getInstance();
 
-            if (event.length() > 0) {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
 
-                Intent intent = new Intent(MainActivity.this, RemainderBroadcast.class);
+            Intent intent = new Intent(MainActivity.this, RemainderBroadcast.class);
 
-                intent.putExtra("event", event);
+            Random r = new Random();
 
-                Random r = new Random();
+            int id = r.ints(0, 1000).findFirst().getAsInt();
 
-                int id = r.ints(0,1000).findFirst().getAsInt();
+            intent.putExtra("id", id);
 
-                intent.putExtra("id", id);
+            PendingIntent pendingIntent
+                    = PendingIntent.getBroadcast(MainActivity.this, 0,
+                    intent, 0);
 
-                PendingIntent pendingIntent
-                        = PendingIntent.getBroadcast(MainActivity.this, 0,
-                        intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Log.d(TAG, "Time: " + calendar.getTimeInMillis());
 
-                int hour = hours.getValue();
+            alarmManager.set(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    pendingIntent);
 
-                Log.d(TAG, "hour:" + hour);
+            Toast.makeText(v.getContext(), "Remainder Set", Toast.LENGTH_SHORT).show();
 
-                int min = minutes.getValue();
-
-                Log.d(TAG, "mins: " + min);
-
-                long time = (hour*36*power(10,5))+(min*6*power(10, 4));
-
-                Log.d(TAG, "millis: " + time);
-
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        time,
-                        pendingIntent);
-
-                Toast.makeText(v.getContext(), "Remainder Set", Toast.LENGTH_SHORT).show();
-
-                eventName.setText("");
-            }
-            else
-                Toast.makeText(v.getContext(), "Enter Valid Event Name", Toast.LENGTH_SHORT).show();
         });
     }
 
-    private void createNotifChannel()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+    private void createNotifChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel1 = new NotificationChannel(
                     "Channel_1",
                     "Remainder",

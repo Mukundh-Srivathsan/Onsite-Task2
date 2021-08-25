@@ -15,8 +15,8 @@ public class RemainderBroadcast extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Channel_1")
                 .setSmallIcon(R.drawable.timer_icon)
-                .setContentTitle(intent.getStringExtra("event"))
-                .setContentText("")
+                .setContentTitle("Remainder")
+                .setContentText("It is time to do it")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
