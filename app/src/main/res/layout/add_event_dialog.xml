@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity">
+    android:id="@+id/layout"
+    android:layout_width="410dp"
+    android:layout_height="500dp"
+    android:layout_marginTop="100dp"
+    android:background="#00FFB9">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="200dp"
         android:text="Event Name:"
-        android:textColor="?colorOnSecondary"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
     <TextView
@@ -20,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text=":"
-        android:textColor="?colorOnSecondary"
+        android:textColor="@color/black"
         android:textSize="30sp" />
 
     <EditText
@@ -29,34 +30,35 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="150dp"
-        android:textColor="?colorOnSecondary"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
     <NumberPicker
         android:id="@+id/hourPicker"
+        android:theme="@style/AppTheme.Picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginRight="50dp"
-        android:theme="@style/AppTheme.Picker" />
+        android:layout_marginRight="50dp" />
 
     <NumberPicker
         android:id="@+id/minutePicker"
+        android:theme="@style/AppTheme.Picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="50dp"
-        android:theme="@style/AppTheme.Picker" />
+        />
 
     <Button
         android:id="@+id/doneButton"
-        app:backgroundTint="@null"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="150dp"
         android:background="#FFCD00"
-        android:text="ADD EVENT"
-        android:textColor="?colorOnPrimary" />
+        android:text="Done"
+        android:textColor="?colorOnPrimary"
+        app:backgroundTint="@null"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"/>
 
 </FrameLayout>
