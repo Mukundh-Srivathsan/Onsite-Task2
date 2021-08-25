@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
                 intent.putExtra("event", event);
 
+                Random r = new Random();
+
+                int id = r.ints(0,1000).findFirst().getAsInt();
+
+                intent.putExtra("id", id);
+
                 PendingIntent pendingIntent
                         = PendingIntent.getBroadcast(MainActivity.this, 0,
                         intent, 0);
@@ -67,11 +75,17 @@ public class MainActivity extends AppCompatActivity {
 
                 int hour = hours.getValue();
 
+                Log.d(TAG, "hour:" + hour);
+
                 int min = minutes.getValue();
+
+                Log.d(TAG, "mins: " + min);
 
                 long time = (hour*36*power(10,5))+(min*6*power(10, 4));
 
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
+                Log.d(TAG, "millis: " + time);
+
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                         time,
                         pendingIntent);
 
