@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private TimePicker timePicker;
 
     private Button addEvent;
+
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         addEvent.setOnClickListener(v -> {
 
-            Calendar calendar = Calendar.getInstance();
+            calendar = Calendar.getInstance();
 
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
             calendar.set(Calendar.MINUTE, timePicker.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
-            Intent intent = new Intent(MainActivity.this, RemainderBroadcast.class);
+            earlyRem();
 
-            Random r = new Random();
+            rem();
 
-            int id = r.ints(0, 1000).findFirst().getAsInt();
-
-            intent.putExtra("id", id);
-
-            PendingIntent pendingIntent
-                    = PendingIntent.getBroadcast(MainActivity.this, 0,
-                    intent, 0);
-
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-            Log.d(TAG, "Time: " + calendar.getTimeInMillis());
-
-            alarmManager.set(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    pendingIntent);
 
             Toast.makeText(v.getContext(), "Remainder Set", Toast.LENGTH_SHORT).show();
 
@@ -88,11 +74,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void earlyRem()
+    {
 
-    private long power(long a, long b) {
-        if (b == 0)
-            return 1;
+        Intent intent = new Intent(MainActivity.this, EarlyBroadcastReciever.class);
 
-        return a * power(a, b - 1);
+        PendingIntent pendingIntent
+                = PendingIntent.getBroadcast(MainActivity.this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long time = calendar.getTimeInMillis() - 120000;
+
+        Log.d(TAG, "Time in early rem: " + time);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                time,
+                pendingIntent);
+    }
+
+    private void rem()
+    {
+        Intent intent = new Intent(MainActivity.this, RemainderBroadcast.class);
+
+        intent.putExtra("disable", false);
+
+        PendingIntent pendingIntent
+                = PendingIntent.getBroadcast(MainActivity.this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Log.d(TAG, "Time in rem: " + calendar.getTimeInMillis());
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                pendingIntent);
     }
 }
