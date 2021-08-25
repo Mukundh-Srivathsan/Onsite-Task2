@@ -8,13 +8,12 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.Calendar;
 
 public class RemainderBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Notification notification = new NotificationCompat.Builder(context, "channel1")
+        Notification notification = new NotificationCompat.Builder(context, "Channel_1")
                 .setSmallIcon(R.drawable.timer_icon)
                 .setContentTitle(intent.getStringExtra("event"))
                 .setContentText("")
