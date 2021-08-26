@@ -48,36 +48,39 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(TAG, "In Disable intent");
 
-            Intent Nintent = new Intent(getApplicationContext() , EarlyBroadcastReciever.class);
+            Intent Nintent = new Intent(getApplicationContext() , RemainderBroadcast.class);
 
             PendingIntent pendingIntent
-                    = PendingIntent.getBroadcast(getApplicationContext(), 0,
-                    Nintent, 0);
+                    = PendingIntent.getBroadcast(getApplicationContext(), 1,
+                    Nintent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
             alarmManager.cancel(pendingIntent);
 
             Toast.makeText(this, "Remainder Canceled", Toast.LENGTH_SHORT).show();
+
+            finish();
+        }else {
+
+            addEvent.setOnClickListener(v -> {
+
+                calendar = Calendar.getInstance();
+
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                earlyRem();
+
+                rem();
+
+
+                Toast.makeText(v.getContext(), "Remainder Set", Toast.LENGTH_SHORT).show();
+
+            });
         }
-
-        addEvent.setOnClickListener(v -> {
-
-            calendar = Calendar.getInstance();
-
-            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-            calendar.set(Calendar.MINUTE, timePicker.getMinute());
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            earlyRem();
-
-            rem();
-
-
-            Toast.makeText(v.getContext(), "Remainder Set", Toast.LENGTH_SHORT).show();
-
-        });
     }
 
     private void createNotifChannel() {
@@ -101,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, EarlyBroadcastReciever.class);
 
         PendingIntent pendingIntent
-                = PendingIntent.getBroadcast(MainActivity.this, 0,
-                intent, 0);
+                = PendingIntent.getBroadcast(MainActivity.this, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -119,11 +122,9 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(getApplicationContext(), RemainderBroadcast.class);
 
-        intent.putExtra("disable", false);
-
         PendingIntent pendingIntent
-                = PendingIntent.getBroadcast(getApplicationContext(), 0,
-                intent, 0);
+                = PendingIntent.getBroadcast(getApplicationContext(), 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
