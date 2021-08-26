@@ -34,11 +34,32 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: Started");
 
+        Intent intent = getIntent();
+
+        boolean disable = intent.getBooleanExtra("disable", false);
+
         createNotifChannel();
 
         timePicker = findViewById(R.id.time);
 
         addEvent = findViewById(R.id.doneButton);
+
+        if(disable) {
+
+            Log.d(TAG, "In Disable intent");
+
+            Intent Nintent = new Intent(getApplicationContext() , EarlyBroadcastReciever.class);
+
+            PendingIntent pendingIntent
+                    = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                    Nintent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            alarmManager.cancel(pendingIntent);
+
+            Toast.makeText(this, "Remainder Canceled", Toast.LENGTH_SHORT).show();
+        }
 
         addEvent.setOnClickListener(v -> {
 
@@ -81,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         PendingIntent pendingIntent
                 = PendingIntent.getBroadcast(MainActivity.this, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -96,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void rem()
     {
-        Intent intent = new Intent(MainActivity.this, RemainderBroadcast.class);
+        Intent intent = new Intent(getApplicationContext(), RemainderBroadcast.class);
 
         intent.putExtra("disable", false);
 
         PendingIntent pendingIntent
-                = PendingIntent.getBroadcast(MainActivity.this, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".RemainderBroadcast"/>
+        <receiver android:name=".RemainderBroadcast" />
+        <receiver android:name=".EarlyBroadcastReciever" />
     </application>
 
 </manifest>

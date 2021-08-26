@@ -1,6 +1,5 @@
 package com.delta.onsite2;
 
-import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,24 +13,17 @@ public class RemainderBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        boolean isDisable = intent.getBooleanExtra("diasble", false);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
+                "Channel_1")
+                .setSmallIcon(R.drawable.timer_icon)
+                .setContentTitle("Remainder")
+                .setContentText("It is time to do it")
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        if (isDisable) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+        notificationManager.notify(100, builder.build());
 
-
-        } else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
-                    "Channel_1")
-                    .setSmallIcon(R.drawable.timer_icon)
-                    .setContentTitle("Remainder")
-                    .setContentText("It is time to do it")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-            notificationManager.notify(100, builder.build());
-        }
     }
 
 }
